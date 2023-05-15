@@ -7,8 +7,6 @@ class CustomerList:
     def __init__(self):
         self.__customers = []
 
-    # endregion
-
     # region properties
     @property
     def count(self):
@@ -29,13 +27,12 @@ class CustomerList:
         else:
             return self.__customers.pop(index)
 
-    def find_by_email(self, email):
-        for index, customer in enumerate(self.__customers):
-            if customer.email == email:
-                return index
-        return -1
+    def remove(self, customer):
+        self.__customers.remove(customer)
+
     # endregion
-    # region methods for updating and deleting customers
+
+    # region methods for updating customers
     def update_customer(self, index, new_customer):
         if isinstance(new_customer, Customer):
             if 0 <= index < self.count:
@@ -45,19 +42,47 @@ class CustomerList:
         else:
             raise TypeError(f"Object must be a valid customer object {type(new_customer)}  {new_customer}")
 
-    def delete_customer(self, index):
-        if 0 <= index < self.count:
-            del self.__customers[index]
-        else:
-            raise IndexError("Customer index out of range")
     # endregion
+
     # region methods for searching customers
     def search_customer_by_name(self, name):
         return [customer for customer in self.__customers if customer.name == name]
 
     def search_customer_by_email(self, email):
         return [customer for customer in self.__customers if customer.email == email]
+
     # endregion
+
+    # region magic methods for list-like behavior
+    def __len__(self):
+        return self.count
+
+    def __getitem__(self, index):
+        if 0 <= index < self.count:
+            return self.__customers[index]
+        else:
+            raise IndexError("Customer index out of range")
+
+    def __setitem__(self, index, value):
+        if isinstance(value, Customer):
+            if 0 <= index < self.count:
+                self.__customers[index] = value
+            else:
+                raise IndexError("Customer index out of range")
+        else:
+            raise TypeError(f"Object must be a valid customer object {type(value)}  {value}")
+
+    def __contains__(self, item):
+        return item in self.__customers
+
+    def __iter__(self):
+        return iter(self.__customers)
+
+    def __str__(self):
+        return "\n".join(str(customer) for customer in self.__customers)
+    # endregion
+
+
 
 if __name__ == "__main__":
     customer_list = CustomerList()
