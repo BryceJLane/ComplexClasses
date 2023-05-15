@@ -1,4 +1,6 @@
 from dominoTests import *
+import boneyard
+
 
 def main():
     testConstructor()
